@@ -1,0 +1,133 @@
+* {
+    box-sizing: border-box;
+}
+p {
+    padding: 0;
+    margin: 0;
+}
+
+body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen-Sans, Ubuntu,
+        Cantarell, 'Helvetica Neue', sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    background-color: rgba(47, 48, 58, 0.4);
+    color: #212121;
+    line-height: 1.5;
+}
+
+:root {
+    --timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+    --animation-duration: 250ms;
+}
+
+.gallery {
+    display: grid;
+    max-width: 1440px;
+    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+    grid-auto-rows: 240px;
+    grid-gap: 20px;
+    justify-content: center;
+    padding-top: 15px;
+    padding-bottom: 10px;
+    list-style: none;
+    margin: 0 auto;
+}
+
+.gallery-item {
+    position: relative;
+    box-shadow: 0px 1px 3px 0px rgba(0, 0, 0, 0.2), 0px 1px 1px 0px rgba(0, 0, 0, 0.14),
+        0px 2px 1px -1px rgba(0, 0, 0, 0.12);
+}
+
+.gallery-image:hover {
+    transform: scale(1.03);
+}
+
+.gallery-image {
+    height: 100%;
+    width: 100%;
+    object-fit: cover;
+    transition: transform var(--animation-duration) var(--timing-function);
+}
+
+.gallery-link {
+    display: block;
+    text-decoration: none;
+    height: 100%;
+}
+
+.gallery-link:hover {
+    cursor: zoom-in;
+}
+
+.photo-card {
+    position: relative;
+}
+
+.gallery-image {
+    display: block;
+}
+
+.info {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 25%;
+    display: flex;
+    gap: 16px;
+    justify-content: center;
+
+    padding: 5px;
+    box-sizing: border-box;
+    color: white;
+    background-color: rgba(47, 48, 58, 0.4);
+}
+
+.info-box {
+    display: inline-block;
+    font-size: 16px;
+}
+
+.info-value {
+    margin-top: 5px;
+    text-align: center;
+}
+.info-item {
+    text-align: center;
+}
+.search-form {
+    text-align: center;
+}
+input {
+    min-width: 25%;
+    min-height: 40px;
+    padding: 8px 8px;
+    padding-left: 20px;
+    outline: none;
+    border: 1px solid rgba(33, 33, 33, 0.2);
+    border-radius: 4px;
+    font-size: 20px;
+}
+button {
+    min-width: 60px;
+    min-height: 40px;
+    padding: 8px 8px;
+    outline: none;
+    border: 1px solid rgba(33, 33, 33, 0.2);
+    border-radius: 4px;
+    background-color: white;
+    color: inherit;
+    font-size: 20px;
+}
+.is-hidden {
+    display: none;
+    visibility: hidden;
+}
+
+.load-more {
+    position: absolute;
+    left: 50%;
+    transform: translate(-50%);
+}
