@@ -6,12 +6,18 @@ import { fetchImages } from './js/fetchImages';
 const searchForm = document.querySelector('#search-form');
 const inputEl = document.querySelector('input[name="searchQuery"]');
 const divGallery = document.querySelector('.gallery');
-const loadMoreBtn = document.querySelector('.load-more');
+// const loadMoreBtn = document.querySelector('.load-more');
 
 let perPage = 40;
 let page = 0;
 let name = inputEl.value;
-btnHidden();
+
+let gallery = new SimpleLightbox('.gallery a', {
+    captionsData: 'alt',
+    captionDelay: 250,
+    animationSpeed: 500,
+});
+// btnIsHiddenTogle();
 
 async function onSearch(e) {
     e.preventDefault();
@@ -29,9 +35,9 @@ async function onSearch(e) {
             if (name.hits.length > 0) {
                 Notiflix.Notify.success(`Hooray! We found ${name.totalHits} images.`);
                 renderImage(name);
-                lightbox();
+                gallery.refresh();
                 if (page < totalPages) {
-                    btnIsNotHidden();
+                    // btnIsHiddenTogle();
                 } else {
                     Notiflix.Notify.info(
                         "We're sorry, but you've reached the end of search results."
@@ -100,34 +106,41 @@ searchForm.addEventListener('submit', onSearch);
 function clear() {
     divGallery.innerHTML = '';
 }
-function btnHidden() {
-    loadMoreBtn.classList.toggle('is-hidden');
-}
-function btnIsNotHidden() {
-    loadMoreBtn.classList.toggle('is-hidden');
-}
+
+// function btnIsHiddenTogle() {
+//     loadMoreBtn.classList.toggle('is-hidden');
+// }
 window.addEventListener(
     'scroll',
     () => {
-        name = inputEl.value;
-        page += 1;
-        fetchImages(name, page, perPage).then(name => {
-            let totalPages = name.totalHits / perPage;
-            renderImage(name);
-            lightbox();
+        if (window.innerHeight + window.pageYOffset >= document.body.offsetHeight) {
+            name = inputEl.value;
+            page += 1;
 
-            if (page >= totalPages) {
-                Notiflix.Notify.info("We're sorry, but you've reached the end of search results.");
-            }
-        });
+            fetchImages(name, page, perPage).then(name => {
+                let totalPages = name.totalHits / perPage;
+                renderImage(name);
+                smothScroll();
+
+                gallery.refresh();
+
+                if (page >= totalPages) {
+                    Notiflix.Notify.info(
+                        "We're sorry, but you've reached the end of search results."
+                    );
+                }
+            });
+        }
     },
     true
 );
 
-function lightbox() {
-    new SimpleLightbox('.gallery a', {
-        captionsData: 'alt',
-        captionDelay: 250,
-        animationSpeed: 500,
+function smothScroll() {
+    const { height: cardHeight } = document
+        .querySelector('.gallery')
+        .firstElementChild.getBoundingClientRect();
+    window.scrollBy({
+        top: cardHeight * 2,
+        behavior: 'smooth',
     });
 }
