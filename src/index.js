@@ -11,6 +11,8 @@ const divGallery = document.querySelector('.gallery');
 let perPage = 40;
 let page = 0;
 let name = inputEl.value;
+let totalPages;
+let endOfListIsReached = false;
 
 let gallery = new SimpleLightbox('.gallery a', {
     captionsData: 'alt',
@@ -24,6 +26,7 @@ async function onSearch(e) {
     clear();
     name = inputEl.value.trim();
     page = 1;
+    endOfListIsReached = false;
     if (name === '') {
         Notiflix.Notify.failure(`Enter a name to search!`);
         return;
@@ -31,7 +34,8 @@ async function onSearch(e) {
     fetchImages(name, page, perPage)
         .then(name => {
             console.log(name.hits);
-            let totalPages = name.totalHits / perPage;
+            totalPages = Math.ceil(name.totalHits / perPage);
+            console.log(totalPages);
             if (name.hits.length > 0) {
                 Notiflix.Notify.success(`Hooray! We found ${name.totalHits} images.`);
                 renderImage(name);
@@ -113,23 +117,25 @@ function clear() {
 window.addEventListener(
     'scroll',
     () => {
-        if (window.innerHeight + window.pageYOffset >= document.body.offsetHeight) {
+        if (
+            window.innerHeight + window.pageYOffset >= document.body.offsetHeight &&
+            page < totalPages
+        ) {
             name = inputEl.value;
             page += 1;
 
             fetchImages(name, page, perPage).then(name => {
-                let totalPages = name.totalHits / perPage;
                 renderImage(name);
                 smothScroll();
-
                 gallery.refresh();
-
-                if (page >= totalPages) {
-                    Notiflix.Notify.info(
-                        "We're sorry, but you've reached the end of search results."
-                    );
-                }
             });
+        } else if (
+            window.innerHeight + window.pageYOffset >= document.body.offsetHeight &&
+            page >= totalPages &&
+            !endOfListIsReached
+        ) {
+            endOfListIsReached = true;
+            Notiflix.Notify.info("We're sorry, but you've reached the end of search results.");
         }
     },
     true
