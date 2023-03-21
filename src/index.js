@@ -13,6 +13,7 @@ let page = 0;
 let name = inputEl.value;
 let totalPages;
 let endOfListIsReached = false;
+
 let gallery = new SimpleLightbox('.gallery a', {
     captionsData: 'alt',
     captionDelay: 250,
@@ -122,26 +123,11 @@ window.addEventListener(
         ) {
             name = inputEl.value;
             page += 1;
-            console.log(page);
-            console.log(typeof page);
-            console.log(totalPages);
-            console.log(typeof totalPages);
-            // let totalPagesCeil = Math.ceil(totalPages);
-            // console.log(totalPagesCeil);
-            // console.log(typeof totalPagesCeil);
-            //console.log(page >= Math.сeil(totalPages));
+
             fetchImages(name, page, perPage).then(name => {
-                // let totalPages = name.totalHits / perPage;
                 renderImage(name);
                 smothScroll();
-
                 gallery.refresh();
-
-                // if (page > Math.сeil(totalPages)) {
-                //     Notiflix.Notify.info(
-                //         "We're sorry, but you've reached the end of search results."
-                //     );
-                // }
             });
         } else if (
             window.innerHeight + window.pageYOffset >= document.body.offsetHeight &&
