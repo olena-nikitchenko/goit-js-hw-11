@@ -34,14 +34,15 @@ async function onSearch(e) {
     fetchImages(name, page, perPage)
         .then(name => {
             console.log(name.hits);
-            totalPages = Math.ceil(name.totalHits / perPage);
+            console.log(name.totalHits);
+            totalPages = Math.round(name.totalHits / perPage);
             console.log(totalPages);
             if (name.hits.length > 0) {
                 Notiflix.Notify.success(`Hooray! We found ${name.totalHits} images.`);
                 renderImage(name);
                 gallery.refresh();
                 if (page < totalPages) {
-                    // btnIsHiddenTogle();
+                    btnIsHiddenTogle();
                 } else {
                     Notiflix.Notify.info(
                         "We're sorry, but you've reached the end of search results."
@@ -111,9 +112,9 @@ function clear() {
     divGallery.innerHTML = '';
 }
 
-// function btnIsHiddenTogle() {
-//     loadMoreBtn.classList.toggle('is-hidden');
-// }
+function btnIsHiddenTogle() {
+    // loadMoreBtn.classList.toggle('is-hidden');
+}
 window.addEventListener(
     'scroll',
     () => {
@@ -135,7 +136,9 @@ window.addEventListener(
             !endOfListIsReached
         ) {
             endOfListIsReached = true;
-            Notiflix.Notify.info("We're sorry, but you've reached the end of search results.");
+            setTimeout(() => {
+                Notiflix.Notify.info("We're sorry, but you've reached the end of search results.");
+            }, 2000);
         }
     },
     true
@@ -150,3 +153,36 @@ function smothScroll() {
         behavior: 'smooth',
     });
 }
+
+// кнопка для прокрутки вверх
+const btnUp = {
+    el: document.querySelector('.btn-up'),
+    show() {
+        // удалим у кнопки класс btn-up_hide
+        this.el.classList.remove('btn-up_hide');
+    },
+    hide() {
+        // добавим к кнопке класс btn-up_hide
+        this.el.classList.add('btn-up_hide');
+    },
+    addEventListener() {
+        // при прокрутке содержимого страницы
+        window.addEventListener('scroll', () => {
+            // определяем величину прокрутки
+            const scrollY = window.scrollY || document.documentElement.scrollTop;
+            // если страница прокручена больше чем на 400px, то делаем кнопку видимой, иначе скрываем
+            scrollY > 400 ? this.show() : this.hide();
+        });
+        // при нажатии на кнопку .btn-up
+        document.querySelector('.btn-up').onclick = () => {
+            // переместим в начало страницы
+            window.scrollTo({
+                top: 0,
+                left: 0,
+                behavior: 'smooth',
+            });
+        };
+    },
+};
+
+btnUp.addEventListener();
